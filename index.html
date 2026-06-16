@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ProTutor — Find a Tutor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMA1I5Cnb-d1W6rvzQSmTITvKCXF54kB0&libraries=places"></script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="saving-track"><div class="saving-fill" id="savingBar"></div></div>
+
+<!-- Top Banner -->
+<div class="top-banner">
+  <div class="banner-inner">
+    <div class="logo">Pro<span>Tutor</span></div>
+    <div class="banner-title">Find a Tutor</div>
+    <div class="step-pill" id="stepPill">Step 1 of 4</div>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="prog-row">
+    <div class="prog-seg active" id="ps1"></div>
+    <div class="prog-seg" id="ps2"></div>
+    <div class="prog-seg" id="ps3"></div>
+    <div class="prog-seg" id="ps4"></div>
+  </div>
+  <div class="step-names">
+    <div class="step-name active" id="sn1">Details</div>
+    <div class="step-name" id="sn2">Preferences</div>
+    <div class="step-name" id="sn3">Schedule</div>
+    <div class="step-name" id="sn4">Confirm</div>
+  </div>
+</div>
+
+<div class="form-wrap">
+
+<!-- ═══════════════════════ PAGE 1 — Basic Details ═══ -->
+<div class="page active" id="pg1">
+  <div class="hero">
+    <div class="hero-tag"><div class="dot"></div>Step 1 of 4</div>
+    <div class="htitle">Basic Details</div>
+    <div class="hsub">Parent, student info and subjects needed.</div>
+  </div>
+
+  <!-- Parent card -->
+  <div class="card">
+    <span class="sec">Parent / Guardian</span>
+    <div class="f">
+      <div class="g2">
+        <div>
+          <span class="lbl">Parent Name <span class="req">*</span></span>
+          <input class="fi" id="parentName" placeholder="Full name">
+        </div>
+        <div>
+          <span class="lbl">Mobile <span class="req">*</span></span>
+          <input class="fi" id="phone" type="tel" inputmode="numeric" placeholder="Mobile number"
+            oninput="this.value=this.value.replace(/[^0-9+\s\-]/g,'').slice(0,15)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student card -->
+  <div class="card">
+    <span class="sec">Student</span>
+    <div class="f">
+      <div class="g3">
+        <div>
+          <span class="lbl">Student Name <span class="req">*</span></span>
+          <input class="fi" id="studentName" placeholder="Full name">
+        </div>
+        <div>
+          <span class="lbl">Class <span class="req">*</span></span>
+          <select class="fs" id="standard" onchange="this.classList.add('picked')">
+            <option value="">–</option>
+            <option>KG</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+            <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+            <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+          </select>
+        </div>
+        <div>
+          <span class="lbl">Board <span class="req">*</span></span>
+          <select class="fs" id="board" onchange="this.classList.add('picked')">
+            <option value="">–</option>
+            <option>CBSE</option><option>ICSE</option><option>IGCSE</option>
+            <option>IB</option><option>State Board</option><option>NIOS</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="f">
+      <span class="lbl">Subjects Needed <span class="req">*</span></span>
+      <div class="subj-pills" id="subjPills">
+        <div class="sp" onclick="this.classList.toggle('s')">Maths</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Science</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Physics</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Chemistry</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Biology</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Social</div>
+        <div class="sp" onclick="this.classList.toggle('s')">EVS</div>
+        <div class="sp" onclick="this.classList.toggle('s')">English</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Hindi</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Tamil</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Kannada</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Marathi</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Telugu</div>
+        <div class="sp" onclick="this.classList.toggle('s')">French</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Sanskrit</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Computers</div>
+        <div class="sp" onclick="this.classList.toggle('s')">Accounts</div>
+        <div class="sp-others" id="otherspill" onclick="toggleOthers()">+ Others</div>
+      </div>
+      <div class="others-input" id="othersInput">
+        <input class="fi" id="othersField" style="margin-top:8px;" placeholder="e.g. Accountancy, Economics, Drawing…">
+      </div>
+    </div>
+  </div>
+
+  <div class="btnrow">
+    <button class="bcont" style="flex:10;" onclick="doSave(1)">Continue →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE 2 — Class Preferences ═══ -->
+<div class="page" id="pg2">
+  <div class="hero">
+    <div class="hero-tag"><div class="dot"></div>Step 2 of 4</div>
+    <div class="htitle">Class Preferences</div>
+    <div class="hsub">How, where and with whom your child learns best.</div>
+  </div>
+
+  <!-- Class Mode card -->
+  <div class="card">
+    <span class="sec">Class Mode <span class="req">*</span></span>
+    <div class="mrow">
+      <div class="mo" id="modeOnline" onclick="setMode('online')">
+        <span class="mico">💻</span>
+        <div class="mtitle">Online Tuition</div>
+        <div class="msub">1 to 1 · Gmeet / Zoom</div>
+      </div>
+      <div class="mo" id="modeHome" onclick="setMode('home')">
+        <span class="mico">🏠</span>
+        <div class="mtitle">Home Tuition</div>
+        <div class="msub">1 to 1 · at student's place</div>
+      </div>
+    </div>
+
+    <!-- Online fields -->
+    <div class="dyn" id="onlineWrap" style="display:none;">
+      <div class="divider"></div>
+      <div class="g2">
+        <div>
+          <span class="lbl">Country <span class="req">*</span></span>
+          <select class="fs" id="countrySelect" onchange="updateCode();this.classList.add('picked')">
+            <option value="">Select country</option>
+          </select>
+          <div class="code-badge" id="codeBadge" style="display:none;">
+            <span id="codeFlag"></span><span id="codeText"></span>
+          </div>
+        </div>
+        <div>
+          <span class="lbl">City <span style="font-size:10px;color:#aab4d4;">(optional)</span></span>
+          <input class="fi" id="onlineCity" placeholder="e.g. Dubai">
+        </div>
+      </div>
+    </div>
+
+    <!-- Home fields -->
+    <div class="dyn" id="homeWrap" style="display:none;">
+      <div class="divider"></div>
+      <div class="infobox">
+        <div class="ii">i</div>
+        <div class="it">We need your <b>precise location</b> to shortlist the nearest tutor and arrange a <b>demo class</b> for you.</div>
+      </div>
+      <div class="g2" style="margin-top:12px;">
+        <div>
+          <span class="lbl">City <span class="req">*</span></span>
+          <select class="fs" id="homeCity" onchange="this.classList.add('picked')">
+            <option value="">Select</option>
+            <option>Bangalore</option>
+            <option>Chennai</option>
+            <option>Hyderabad</option>
+            <option>Mumbai</option>
+          </select>
+        </div>
+        <div>
+          <span class="lbl">Area Name <span class="req">*</span></span>
+          <input class="fi" id="homeArea" placeholder="e.g. Koramangala">
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <span class="lbl">Exact Location <span class="req">*</span></span>
+        <span class="sub">Pin your location so we can assign the nearest tutor accurately.</span>
+        <button class="gps-btn" id="gpsBtn" onclick="fetchGPS()">
+          📍 <span id="gpsBtnTxt">Choose My Location</span>
+        </button>
+        <!-- Location result shown BELOW detect button -->
+        <div class="loc-card" id="locCard">
+          <div class="loc-head">
+            <div class="loc-dot"></div>
+            <div class="loc-title">Location fetched successfully</div>
+          </div>
+          <div class="loc-row"><div class="loc-lbl">Area</div><div class="loc-val" id="locStreet">—</div></div>
+          <div class="loc-coords" id="locCoords">—</div>
+          <div style="display:none;" id="locArea"></div>
+          <div style="display:none;" id="locCity"></div>
+          <div style="display:none;" id="locPremise"></div>
+        </div>
+        <button class="retry-btn" id="retryBtn" onclick="resetGPS()">🔄 Re-pin Location</button>
+        <div class="denied-box" id="deniedBox">
+          <div class="denied-title">🔒 Location access blocked</div>
+          <div style="font-size:11px;color:#7f1d1d;line-height:1.55;margin-bottom:4px;">To enable:</div>
+          <ul class="denied-steps">
+            <li><b>Chrome:</b> Tap lock icon → Site settings → Location → Allow</li>
+            <li><b>Safari:</b> Settings → Safari → Location → Allow</li>
+            <li>Then tap <b>Choose My Location</b> again</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="notebox" style="margin-top:12px;">
+      <div class="ni">i</div>
+      <div class="nt">Home tuition available only in <b>Bangalore, Chennai, Hyderabad</b> and <b>Mumbai</b>. Outside these cities? Choose <b>Online Tuition</b>.</div>
+    </div>
+  </div>
+
+  <!-- Schedule card -->
+  <div class="card">
+    <span class="sec">Schedule Preference</span>
+    <div class="f">
+      <div class="g2">
+        <div>
+          <span class="lbl">Days / Week <span class="req">*</span></span>
+          <select class="fs" id="daysPerWeek" onchange="this.classList.add('picked');updateSchedRec()">
+            <option value="">Select</option>
+            <option>1 day</option><option>2 days</option><option>3 days</option>
+            <option>4 days</option><option>5 days</option><option>6 days</option>
+          </select>
+        </div>
+        <div>
+          <span class="lbl">Hrs / Session <span class="req">*</span></span>
+          <select class="fs" id="hoursPerSession" onchange="this.classList.add('picked');updateSchedRec()">
+            <option value="">Select</option>
+            <option>1 hour</option><option>1.5 hours</option><option>2 hours</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- Recommendation box -->
+    <div class="rec-box" id="schedRecBox">
+      <div class="rec-box-head">
+        <span class="rec-box-icon">💡</span>
+        <span class="rec-box-title">Our Recommendation</span>
+      </div>
+      <div class="rec-box-subjects" id="schedRecSubjects"></div>
+      <div class="rec-box-main" id="schedRecMain"></div>
+      <div class="rec-box-why" id="schedRecWhy"></div>
+    </div>
+  </div>
+
+  <!-- Gender pref card -->
+  <div class="card">
+    <span class="sec">Tutor Gender Preference <span class="req">*</span></span>
+    <div class="gprow" id="gpRow">
+      <div class="gp" id="gpAny" onclick="pickGP(this,'Any')">
+        <div class="rec-badge">Recommended</div>
+        <span class="gico">🤝</span>
+        <div class="gtxt">Any</div>
+      </div>
+      <div class="gp" onclick="pickGP(this,'Male')">
+        <span class="gico">👨‍🏫</span>
+        <div class="gtxt">Male</div>
+      </div>
+      <div class="gp" onclick="pickGP(this,'Female')">
+        <span class="gico">👩‍🏫</span>
+        <div class="gtxt">Female</div>
+      </div>
+    </div>
+    <div class="infobox">
+      <div class="ii">i</div>
+      <div class="it">All tutors are <b>professionals and KYC verified</b>. We suggest keeping your option as <b>Any</b> to get matched with the most qualified tutor faster.</div>
+    </div>
+  </div>
+
+  <!-- Additional info card -->
+  <div class="card">
+    <span class="sec">Additional Information</span>
+    <div class="f">
+      <span class="lbl">Special Requirements or Notes</span>
+      <span class="sub">Preferred timings, learning difficulties, anything else we should know.</span>
+      <textarea class="fta" id="addlInfo"
+        oninput="document.getElementById('ac').textContent=Math.min(this.value.length,600)"
+        placeholder="e.g. Prefer evening slots after 5pm. Child needs extra attention in Algebra…"></textarea>
+      <div class="charcnt"><span id="ac">0</span> / 600</div>
+    </div>
+  </div>
+
+  <div class="btnrow">
+    <button class="bback" onclick="goBack()">← Back</button>
+    <button class="bcont" id="pg2ContBtn" onclick="doSave(2)">Continue →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE 3 — QUOTATION ═══ -->
+<div class="page" id="pg3">
+  <div class="hero">
+    <div class="hero-tag"><div class="dot"></div>Step 3 of 4</div>
+    <div class="htitle">Quotation</div>
+    <div class="hsub">Approximate fee estimate based on your selections.</div>
+  </div>
+
+  <!-- Summary bar -->
+  <div class="summary-bar">
+    <div class="summary-bar-info">
+      <span class="summary-bar-title">Your Plan</span>
+      <div class="summary-chips" id="summaryChips"></div>
+    </div>
+    <button class="change-plan-btn" onclick="goTo(2)">Change Plan</button>
+  </div>
+
+  <!-- Fee estimator card -->
+  <div class="fee-card" id="feeCard">
+    <div id="feeModeBadge" class="fee-mode-badge"></div>
+    <div id="feeBody"></div>
+  </div>
+
+  <!-- Approx note -->
+  <div class="approx-note">
+    💡 <b>All prices shown are approximate.</b> Actual fee may vary based on tutor profile and availability. Need a <b>customised plan</b>? Our team will call you after submission to tailor the right package.
+  </div>
+
+  <!-- Quote decision card -->
+  <div class="card" style="margin-top:14px;">
+    <span class="sec">Do You Accept This Quote?</span>
+    <div class="quote-toggle-row">
+      <div class="qt accept" id="qtAccept" onclick="pickQuote('accept')" style="flex:1;">
+        <span class="qico">✅</span>
+        <div class="qtxt">Accept Quote</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <span id="qtDecline" onclick="pickQuote('decline')" style="font-size:11px;color:#aab4d4;cursor:pointer;text-decoration:underline;text-underline-offset:2px;">I don't accept this quote</span>
+    </div>
+
+    <!-- My Quote field — shown only on Accept -->
+    <div class="my-quote-wrap" id="myQuoteWrap">
+      <div class="divider" style="margin-top:14px;"></div>
+      <span class="lbl" style="margin-top:4px;display:block;">Your Expected Quote <span class="req">*</span></span>
+      <p class="my-quote-note">Our quote is based on <b>decent experienced tutors</b>. If you lower the fee, we may not be able to match you with a tutor of the same experience level — the tutor quality or experience may be lesser. Our team will call you to discuss the best option within your budget.</p>
+      <input class="fi" id="myQuoteField" placeholder="e.g. ₹8,000/month" style="margin-bottom:4px;">
+    </div>
+  </div>
+
+  <div class="btnrow">
+    <button class="bback" onclick="goBack()">← Back</button>
+    <button class="bfin" id="pg3SubmitBtn" onclick="doSubmit()">Continue to Plans →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PAGE 4 — SUBSCRIPTION PLANS ═══ -->
+<div class="page" id="pg4">
+<div class="sub-wrap">
+
+  <div class="sub-hero">
+    <h2>Activate now so our team can<br>start working on your request</h2>
+    <p>Secure the right tutor, dedicated support, and a smooth learning journey for your child.</p>
+  </div>
+
+  <div class="sub-offer">
+    <span>🎁 <strong>Limited time: 25% off on 12 month plan!</strong><br>Get full year tutor support at just ₹1,499</span>
+  </div>
+
+  <div class="plan-toggle">
+    <div class="pt-seg" onclick="swPlan('essential',this)">
+      <span class="pt-name">6 Months</span>
+      <span class="pt-amt">₹999</span>
+    </div>
+    <div class="pt-seg active seg-blue" onclick="swPlan('advantage',this)">
+      <span class="pt-badge bb">Best Value</span>
+      <span class="pt-name">12 Months</span>
+      <span class="pt-amt">₹1,499</span>
+    </div>
+    <div class="pt-seg" onclick="swPlan('elite',this)">
+      <span class="pt-badge ba">Premium</span>
+      <span class="pt-name">Elite</span>
+      <span class="pt-amt">₹2,999</span>
+    </div>
+  </div>
+
+  <!-- ══ ESSENTIAL ══ -->
+  <div class="sp-panel" id="sp-essential">
+    <div class="sp-card c-default">
+      <div class="sp-head h-default">
+        <div class="sp-plan-label">Essential</div>
+        <div class="sp-price-row">
+          <div class="sp-price">₹999</div>
+          <div class="sp-price-meta"><div class="sp-tenure">6 months</div></div>
+        </div>
+      </div>
+      <div class="sp-metrics">
+        <div class="sp-met m-default"><div class="sp-met-lbl">Validity</div><div class="sp-met-val">6 months</div></div>
+        <div class="sp-met m-default"><div class="sp-met-lbl">Tutor replacement</div><div class="sp-met-val">3 free</div></div>
+        <div class="sp-met m-default"><div class="sp-met-lbl">Worksheets</div><div class="sp-met-val">6 months</div></div>
+      </div>
+      <div class="sp-feats">
+        <div class="sp-fi"><span class="sp-ck">✓</span>Get tutor in 5 to 7 working days</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>No advance tuition fee</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Dedicated Relationship Manager</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Attendance tracking</div>
+        <div class="sp-fi"><span class="sp-pill p-neutral">🛡 Verified tutors</span></div>
+      </div>
+      <div class="sp-cta-wrap">
+        <a onclick="trackSubscription('999', 'https://rzp.io/rzp/protutor-999-plan')" class="sp-cta cta-outline" style="cursor:pointer;">Get Started · ₹999</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ADVANTAGE ══ -->
+  <div class="sp-panel active" id="sp-advantage">
+    <div class="sp-card c-blue">
+      <div class="sp-head h-blue">
+        <div class="sp-plan-label">Advantage</div>
+        <div class="sp-price-row">
+          <div class="sp-price">₹1,499</div>
+          <div class="sp-price-meta">
+            <div class="sp-strike">₹1,999</div>
+            <div class="sp-tenure">12 months</div>
+            <div class="sp-save">Save 25%</div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-metrics">
+        <div class="sp-met m-blue"><div class="sp-met-lbl">Validity</div><div class="sp-met-val">12 months</div></div>
+        <div class="sp-met m-blue"><div class="sp-met-lbl">Tutor replacement</div><div class="sp-met-val">6 free</div></div>
+        <div class="sp-met m-blue"><div class="sp-met-lbl">Worksheets</div><div class="sp-met-val">12 months</div></div>
+      </div>
+      <div class="sp-feats">
+        <div class="sp-fi"><span class="sp-ck">✓</span>Get tutor in 3 to 5 working days</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>No advance tuition fee</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Siblings included <span style="font-size:11px;color:#aab4d4;">(tutor search, no extra fee)</span></div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Dedicated Relationship Manager</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Attendance tracking</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Change subjects anytime</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Change class plan anytime</div>
+        <div class="sp-fi"><span class="sp-pill p-blue">🛡 KYC verified tutors</span></div>
+      </div>
+      <div class="sp-cta-wrap">
+        <a onclick="trackSubscription('1499', 'https://rzp.io/rzp/protutor-1499-plan')" class="sp-cta cta-blue" style="cursor:pointer;">Get Started · ₹1,499</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ELITE ══ -->
+  <div class="sp-panel" id="sp-elite">
+    <div class="sp-card c-amber">
+      <div class="sp-head h-amber">
+        <div class="sp-plan-label">Elite</div>
+        <div class="sp-price-row">
+          <div class="sp-price">₹2,999</div>
+          <div class="sp-price-meta"><div class="sp-tenure">12 months</div></div>
+        </div>
+      </div>
+      <div class="sp-metrics">
+        <div class="sp-met m-amber"><div class="sp-met-lbl">Validity</div><div class="sp-met-val">12 months</div></div>
+        <div class="sp-met m-amber"><div class="sp-met-lbl">Tutor replacement</div><div class="sp-met-val">Unlimited</div></div>
+        <div class="sp-met m-amber"><div class="sp-met-lbl">Worksheets</div><div class="sp-met-val">Unlimited</div></div>
+      </div>
+      <div class="sp-feats">
+        <div class="sp-fi"><span class="sp-ck">✓</span>Get tutor in 1 to 3 days</div>
+        <div class="sp-fi"><span class="sp-pill p-amber">⚡ Online backup tutor arranged same day</span></div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>No advance tuition fee</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Siblings included <span style="font-size:11px;color:#aab4d4;">(tutor search, no extra fee)</span></div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Priority Relationship Manager</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Attendance tracking</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Monthly progress report</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Personalised learning plan</div>
+        <div class="sp-fi"><span class="sp-ck">✓</span>Change subjects and class plan anytime</div>
+        <div class="sp-fi"><span class="sp-pill p-amber">🛡 KYC verified tutors</span></div>
+      </div>
+      <div class="sp-cta-wrap">
+        <a onclick="trackSubscription('2999', 'https://rzp.io/rzp/protutor-2999-plan')" class="sp-cta cta-amber" style="cursor:pointer;">Get Started · ₹2,999</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sp-skip"><a onclick="trackSubscription('Skipped', null)">Skip for now, I'll subscribe later</a></div>
+
+  <!-- FAQ (frozen) -->
+  <div class="faq-section">
+    <div class="faq-header">
+      <h2>Frequently Asked Questions</h2>
+      <p>Everything you need to know before getting started</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">Why do I need to pay a subscription fee?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">ProTutor receives <strong>hundreds of tuition requests every day</strong>. This subscription ensures you are <strong>prioritised as a serious parent</strong> and gives you access to our <strong>full-service experience</strong> &#8212; a verified tutor, a dedicated Relationship Manager, and end-to-end support from day one. Think of it as your commitment to your child\'s learning, backed by ours.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">Is this subscription fee part of my tuition fee?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">No, and this is important to understand. Your <strong>subscription fee and tuition fee are completely separate</strong>. The subscription covers our service, support, and platform benefits. Tuition is paid monthly based <strong>only on classes attended</strong>. Two different things, both kept <strong>fully transparent</strong>.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">What is your refund policy?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">We stand behind our service. If we <strong>cannot connect you with a suitable tutor within the committed timeframe</strong>, you can <strong>raise a refund request</strong> after that period. Refunds are processed under our terms and conditions. Your trust matters more to us than the fee.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">Is this a recurring payment?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">No, it is a <strong>one-time payment</strong> for your chosen plan duration. When your plan ends, you decide what happens next. Continue with the same tutor, renew the plan, or take a break. <strong>No automatic charges, no pressure</strong>.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">How soon will my child get a tutor?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">The moment we receive payment confirmation, <strong>our team starts working</strong>. We call you first to understand your requirement in detail, then begin shortlisting. Depending on your plan, <strong>a tutor is assigned within 3 to 7 working days</strong>. You are never left waiting without an update.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">What if my child does not connect with the first tutor?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">We arrange a <strong>free demo class</strong> before anything is finalised. If it does not feel right, just let your RM know. We shortlist another tutor and arrange a <strong>fresh demo at no extra cost</strong>. Your child\'s comfort comes before anything else.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">What if the tutor is absent?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">You <strong>pay only for classes that happen</strong>. If the tutor is absent, that class is <strong>not billed</strong>. For Elite plan members, an <strong>online backup tutor is arranged on the same day</strong> so learning never stops.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">What does a Relationship Manager actually do?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">Think of your RM as your <strong>personal coordinator at ProTutor</strong>. Their number is shared with you <strong>on the day of onboarding or the very next day</strong>. Got a scheduling conflict? Need a replacement? Have a concern? <strong>One call or message to your RM handles it</strong>. You never explain your situation to a stranger twice.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">How does attendance tracking work?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">Your tutor marks attendance through our app <strong>right after every class</strong>. You get a <strong>notification instantly</strong>. Your monthly fee is calculated based on <strong>this record alone</strong>. No manual tracking, no disputes, <strong>full clarity every month</strong>.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">What are worksheets and what is their value?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">Worksheets are <strong>topic-wise and concept-wise practice materials</strong> aligned with what your child is being taught each week. Access is shared when classes begin. <strong>Valued at Rs.2,000</strong>, this is included in your plan at <strong>no extra cost</strong>.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">Can I change subjects or switch the class plan later?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">Yes, and this is one of the most practical benefits of being on the <strong>Advantage or Elite plan</strong>. Mid-year subject change? <strong>Done</strong>. Child moved to a higher class? <strong>Updated</strong>. Need an extra tutor for a new subject? <strong>Requested</strong>. Your plan adapts to your child\'s needs, not the other way around.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">Are my other children also covered?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">Yes. <strong>Advantage and Elite plans cover tutor matching and support for siblings</strong> under one subscription, with <strong>tuition billed separately per child</strong> based on classes attended.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">How does the tuition fee payment work?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">A secure payment link is sent every month showing <strong>only the classes attended</strong> that month. <strong>Home tuition is postpaid</strong> &#8212; you pay after classes are done, not before. Advance payment applies only to <strong>online and short-term sessions</strong>.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span class="faq-q-text">How are tutors verified?</span><span class="faq-q-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg></span></button><div class="faq-a"><div class="faq-a-inner">Every tutor goes through <strong>Aadhaar, nationality, and residence verification</strong> before being matched with any family. All details are <strong>stored securely</strong>. We take the <strong>safety of your home and your child</strong> seriously, and our verification process reflects that.</div></div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</div><!-- /form-wrap -->
+
+<!-- Success Screen -->
+<!-- Submit overlay -->
+<div class="submit-overlay" id="submitOverlay">
+  <div class="spin-ring"></div>
+  <div class="submit-overlay-text">Submitting your request…</div>
+  <div class="submit-overlay-sub">Please wait, this takes a few seconds</div>
+</div>
+
+<div id="successScreen">
+  <div class="s-top-banner">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;max-width:560px;">
+      <div class="s-top-logo">Pro<span>Tutor</span></div>
+      <div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.8);">Find a Tutor</div>
+    </div>
+  </div>
+  <div class="success-wrap">
+    <div class="sico">🎉</div>
+    <div class="stitle">Request Submitted<br>Successfully!</div>
+    <div class="s-divider"></div>
+    <div class="s-card">
+      <span class="s-label">What happens next</span>
+      <p>Our <strong>coordination team will call you</strong> to confirm your requirement and understand your child's needs.<br><br>
+      A <strong>demo class will be arranged within 2–4 days</strong>, and if everything goes well, <strong>classes can begin within a week</strong>. 🚀</p>
+    </div>
+    <div class="s-pro-tip">
+      <div class="pt-head">
+        <span style="font-size:16px;">💡</span>
+        <span class="pt-title">Quick Tip</span>
+      </div>
+      <p>Keep your phone handy — our coordinator may call to confirm details and arrange a demo class.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- JS Modules (load order matters) -->
+<script src="js/config.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/gps.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/sheet.js"></script>
+<script src="js/crm-api.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/fee-engine.js"></script>
+<script src="js/subscription.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
