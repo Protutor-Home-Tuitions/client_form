@@ -18,6 +18,30 @@
 // CRM API endpoint. Update this to your live CRM domain.
 var CRM_API_URL = 'https://leads.protutor.co.in/api/public/form-submit';
 
+// ── Referral channel capture ───────────────────────────────────────
+// Reads ?r=<code> from the URL the FIRST time the form is opened, then
+// stores it in sessionStorage so navigating between form steps (or any
+// later code in the session) keeps the same channel. The backend
+// translates the code to a human-readable source (Call / WhatsApp / ...).
+// Unknown codes are still sent — the backend whitelist decides validity.
+(function captureReferral() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var fromUrl = params.get('r');
+    if (fromUrl) {
+      sessionStorage.setItem('protutor_ref', fromUrl);
+    }
+  } catch (e) {
+    // sessionStorage / URLSearchParams should always work in modern
+    // browsers; if they don't, we just save the lead without a channel.
+  }
+})();
+
+function getReferralCode() {
+  try { return sessionStorage.getItem('protutor_ref') || ''; }
+  catch (e) { return ''; }
+}
+
 // Low-level sender. Fire-and-forget: errors are caught and logged, never
 // surfaced to the parent. keepalive lets the request finish even if the
 // page is navigating to the success screen.
@@ -91,6 +115,7 @@ function saveLeadToCRM() {
     hourly_fee:        window._hourlyFee || '',
     monthly_estimate:  window._monthlyEstimate || '',
     quote_accepted:    'Pending',
+    ref:               getReferralCode(),
   };
 
   postToCRM(payload);
