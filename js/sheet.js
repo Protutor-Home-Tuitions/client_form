@@ -1,39 +1,53 @@
 // ══════════════════════════════════════════════
-// ProTutor - Google Sheet Integration
+// ProTutor — Google Sheet Integration (Passive Log)
+// ══════════════════════════════════════════════
+//
+// Google Sheets is kept as a PASSIVE LOG. It runs in parallel with the
+// CRM save (crm-api.js) but the form's success/failure no longer depends
+// on it. If Sheets is broken, the form still works. If the CRM is broken,
+// the queue in crm-api.js handles it.
+//
+// We use a hidden iframe trick because Apps Script doesn't support CORS
+// for browser POST. The 3-second timer below isn't a "wait for success" —
+// it's just enough time for the iframe to fire its request before we
+// clean it up.
 // ══════════════════════════════════════════════
 
-// ── Sheet Helper ──────────────────────────────────────────────
 var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyHbE7WcOucmBBKxjuE4OO_5I0U6gMLoyzi1_3MfcnQQFN8iSYv5JwzhXq9Q7o1z4rX/exec';
 
-function postToSheet(payload, callback) {
-  var iframeName = 'pf_' + Date.now();
-  var ifr = document.createElement('iframe');
-  ifr.name = iframeName;
-  ifr.style.display = 'none';
-  document.body.appendChild(ifr);
+function postToSheet(payload) {
+  try {
+    var iframeName = 'pf_' + Date.now();
+    var ifr = document.createElement('iframe');
+    ifr.name = iframeName;
+    ifr.style.display = 'none';
+    document.body.appendChild(ifr);
 
-  var frm = document.createElement('form');
-  frm.method = 'POST';
-  frm.action = SHEET_URL;
-  frm.target = iframeName;
+    var frm = document.createElement('form');
+    frm.method = 'POST';
+    frm.action = SHEET_URL;
+    frm.target = iframeName;
 
-  var inp = document.createElement('input');
-  inp.type = 'hidden';
-  inp.name = 'payload';
-  inp.value = JSON.stringify(payload);
-  frm.appendChild(inp);
+    var inp = document.createElement('input');
+    inp.type = 'hidden';
+    inp.name = 'payload';
+    inp.value = JSON.stringify(payload);
+    frm.appendChild(inp);
 
-  document.body.appendChild(frm);
-  frm.submit();
+    document.body.appendChild(frm);
+    frm.submit();
 
-  setTimeout(function() {
-    try { document.body.removeChild(frm); } catch(e) {}
-    try { document.body.removeChild(ifr); } catch(e) {}
-    if (callback) callback();
-  }, 3000);
+    setTimeout(function() {
+      try { document.body.removeChild(frm); } catch(e) {}
+      try { document.body.removeChild(ifr); } catch(e) {}
+    }, 3000);
+  } catch (e) {
+    console.warn('[Sheet] log failed:', e);
+  }
 }
 
-// ── Auto-save (fires silently when Page 3 loads) ─────────────
+// ── autoSaveToSheet: called when Page 3 (quote) loads ─────────────
+// Fires BOTH the Sheet log (passive) and the CRM save (authoritative).
 function autoSaveToSheet() {
   var subjects = Array.from(document.querySelectorAll('#subjPills .sp.s'))
     .map(function(e) { return e.textContent.trim(); }).join(', ');
@@ -74,13 +88,15 @@ function autoSaveToSheet() {
     'Subscription Action': '',
   };
 
-  postToSheet(data, null);
+  // Passive log to Sheets.
+  postToSheet(data);
 
-  // Also send to the CRM database (fire-and-forget; Sheets stays the net).
+  // Authoritative save to CRM (handles its own retry + queue).
   if (typeof saveLeadToCRM === 'function') saveLeadToCRM();
 }
 
-// ── Submit (updates existing row with quote decision) ─────────
+// ── submitToSheets: called on the final accept/decline submit ──────
+var submitted = false;
 function submitToSheets() {
   if (submitted) return;
   submitted = true;
@@ -96,17 +112,21 @@ function submitToSheets() {
     'My Quote':           quoteChoice === 'decline' ? document.getElementById('myQuoteField').value : '',
   };
 
-  postToSheet(data, function() {
-    showPlansPage();
-  });
+  // Passive log to Sheets.
+  postToSheet(data);
 
-  // Also update the quote decision in the CRM database (fire-and-forget).
+  // Authoritative save to CRM. postWithSafety always resolves
+  // (success → done; failure → queued for later flush).
   if (typeof updateQuoteInCRM === 'function') updateQuoteInCRM();
+
+  // Wait long enough for both the Sheets iframe and the CRM fetch to
+  // have a fair chance to fire before navigating. 3 seconds matches the
+  // iframe cleanup window in postToSheet.
+  setTimeout(function() { showPlansPage(); }, 3000);
 }
 
 function showPlansPage() {
   document.getElementById('submitOverlay').classList.remove('show');
-  // Subscription page disabled for now
   showSuccess();
 }
 
