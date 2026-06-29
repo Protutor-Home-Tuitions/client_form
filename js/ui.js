@@ -49,9 +49,11 @@ function updateProgress(n) {
 function goTo(n) {
   document.getElementById('pg' + cur).classList.remove('active');
   hist.push(cur); cur = n;
+  window._currentPage = n;
   document.getElementById('pg' + n).classList.add('active');
   updateProgress(n);
   if (n === 3) buildPage3();
+  if (n === 3 && typeof logEvent === 'function') logEvent('page3_viewed');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function goBack() {

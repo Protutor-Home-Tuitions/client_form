@@ -44,6 +44,10 @@ function validate(n) {
 
 function doSave(n) {
   if (!validate(n)) return;
+  if (typeof logEvent === 'function') {
+    if (n === 1) logEvent('page1_completed');
+    if (n === 2) logEvent('page2_completed');
+  }
   animSave(function() {
     if (n < TOTAL) {
       toast('✓ Saved — moving to next step', 1400);

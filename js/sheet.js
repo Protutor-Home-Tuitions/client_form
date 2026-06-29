@@ -117,7 +117,13 @@ function submitToSheets() {
 
   // Authoritative save to CRM. postWithSafety always resolves
   // (success → done; failure → queued for later flush).
-  if (typeof updateQuoteInCRM === 'function') updateQuoteInCRM();
+  if (typeof updateQuoteInCRM === 'function') {
+    updateQuoteInCRM().then(function () {
+      // Reset the lock so the user can retry if something went weird.
+      // Safe to reset since the operation completed (success or queued).
+      setTimeout(function () { submitted = false; }, 5000);
+    });
+  }
 
   // Wait long enough for both the Sheets iframe and the CRM fetch to
   // have a fair chance to fire before navigating. 3 seconds matches the

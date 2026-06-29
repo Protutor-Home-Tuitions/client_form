@@ -109,22 +109,47 @@ function postOnce(payload) {
 // Permanent (non-transient) errors are NOT queued — they would just fail
 // forever. Logged loudly so the operator notices.
 function postWithSafety(payload) {
+  var action = payload && payload.action ? payload.action : 'unknown';
+  if (typeof logEvent === 'function') {
+    logEvent('save_attempted', { action: action });
+  }
   return postOnce(payload)
+    .then(function () {
+      if (typeof logEvent === 'function') {
+        logEvent('save_succeeded', { action: action });
+      }
+      if (action === 'quote_update') window._submissionComplete = true;
+    })
     .catch(function (err1) {
       if (!err1.transient) {
         console.error('[CRM] permanent failure, dropping payload:', err1.message, payload);
+        if (typeof logEvent === 'function') {
+          logEvent('save_failed', { action: action, reason: err1.message, transient: false });
+        }
         return; // do not retry, do not queue
       }
       console.warn('[CRM] attempt 1 failed (transient):', err1.message, '— retrying in 2s');
       return new Promise(function (r) { setTimeout(r, RETRY_DELAY_MS); })
         .then(function () { return postOnce(payload); })
+        .then(function () {
+          if (typeof logEvent === 'function') {
+            logEvent('save_succeeded', { action: action, after_retry: true });
+          }
+          if (action === 'quote_update') window._submissionComplete = true;
+        })
         .catch(function (err2) {
           if (!err2.transient) {
             console.error('[CRM] permanent failure on retry, dropping:', err2.message, payload);
+            if (typeof logEvent === 'function') {
+              logEvent('save_failed', { action: action, reason: err2.message, transient: false });
+            }
             return;
           }
           console.warn('[CRM] attempt 2 failed (transient):', err2.message, '— queuing for later');
           queuePush(payload);
+          if (typeof logEvent === 'function') {
+            logEvent('save_queued', { action: action, reason: err2.message });
+          }
         });
     });
 }
@@ -191,6 +216,19 @@ if (document.readyState === 'loading') {
   flushQueue();
 }
 
+// ── Phone normalization (client-side) ────────────────────────────────
+// Strips leading zeros, country code 91, ensures clean number goes to CRM.
+function normalizeFormPhone(raw) {
+  var d = String(raw || '').replace(/[^0-9]/g, '');
+  // Strip leading zeros
+  d = d.replace(/^0+/, '');
+  // Strip 91 prefix if 12 digits and next digit is 6-9
+  if (d.length === 12 && d.substr(0,2) === '91' && '6789'.indexOf(d[2]) >= 0) {
+    d = d.substr(2);
+  }
+  return d;
+}
+
 // ── Payload builders ──────────────────────────────────────────────
 function buildInitialSavePayload() {
   var subjects = Array.from(document.querySelectorAll('#subjPills .sp.s'))
@@ -215,7 +253,7 @@ function buildInitialSavePayload() {
     action:            'initial_save',
     request_id:        window._requestId,
     parent_name:       document.getElementById('parentName').value,
-    mobile:            document.getElementById('phone').value,
+    mobile:            normalizeFormPhone(document.getElementById('phone').value),
     country_code:      dialCode,
     student_name:      document.getElementById('studentName').value,
     standard:          standardCombined,

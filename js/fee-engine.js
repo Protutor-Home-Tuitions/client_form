@@ -42,6 +42,9 @@ var quoteChoice = ''; // 'accept' or 'decline'
 
 function pickQuote(choice) {
   quoteChoice = choice;
+  if (typeof logEvent === 'function') {
+    logEvent(choice === 'accept' ? 'quote_accepted' : 'quote_declined');
+  }
   var acceptCard = document.getElementById('qtAccept');
   var declineLink = document.getElementById('qtDecline');
   if (choice === 'accept') {
@@ -63,7 +66,6 @@ function doSubmit() {
   if (quoteChoice === 'decline' && !document.getElementById('myQuoteField').value.trim()) {
     toast('⚠ Please enter your expected quote / budget'); return;
   }
-  submitted = false; // reset so submit can proceed
   submitToSheets();
 }
 
