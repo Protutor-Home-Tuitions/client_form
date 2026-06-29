@@ -136,6 +136,8 @@ function buildPage3() {
 
   var rawLow  = roundTo100(rate.low  * hrsNum * classes * (isHighClass ? subjCount : 1));
   var rawHigh = roundTo100(rate.high * hrsNum * classes * (isHighClass ? subjCount : 1));
+  var perSubjLow  = isHighClass && subjCount > 1 ? roundTo100(rawLow  / subjCount) : rawLow;
+  var perSubjHigh = isHighClass && subjCount > 1 ? roundTo100(rawHigh / subjCount) : rawHigh;
   var discLow  = hasDiscount ? roundTo100(rawLow  * 0.85) : rawLow;
   var discHigh = hasDiscount ? roundTo100(rawHigh * 0.85) : rawHigh;
   var savMonLow  = hasDiscount ? (rawLow  - discLow)  : 0;
